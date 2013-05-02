@@ -31,18 +31,18 @@ class LogstashFormatter(logging.Formatter):
     def __init__(self,
                  source_host=None,
                  extra={},
-                 json_encoder=None,
+                 json_cls=None,
                  json_default=_default_json_default):
         """
         :param source_host: override source host name
         :param extra: provide extra fields always present in logs
-        :param json_encoder: JSON encoder to forward to json.dumps
+        :param json_cls: JSON encoder to forward to json.dumps
         :param json_default: Default JSON representation for unknown types,
                              by default coerce everything to a string
         """
 
-        self.json_default
-        self.json_encoder
+        self.json_default = json_default
+        self.json_cls = json_cls
         self.defaults = extra
         if source_host:
             self.source_host = source_host
@@ -86,6 +86,4 @@ class LogstashFormatter(logging.Formatter):
                      '@source_host': self.source_host,
                      '@fields': fields})
 
-        return json.dumps(logr,
-                          json_default=self.json_default,
-                          json_encoder=self.json_encoder)
+        return json.dumps(logr, default=self.json_default, cls=self.json_cls)
