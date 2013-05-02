@@ -23,6 +23,8 @@ Usage
 
 Json outputs are provided by the LogstashFormatter logging formatter.
 
+::
+
     import logging
     from logstash_formatter import LogstashFormatter
 
@@ -42,6 +44,8 @@ You can also add extra fields to your json output by specifying a dict in place 
 the named argument ``extra`` as a dictionary. When supplying the ``exc_info`` named argument with a truthy value,
 and if an exception is found on the stack, its traceback will be attached to the payload as well.
 
+::
+
     logger.info({"account": 123, "ip": "172.20.19.18"})
     logger.info("classic message for account: %s", account, extra={"account": account})
     
@@ -60,6 +64,8 @@ The following keys will be found in the output JSON:
 * ``@timestamp``: ISO 8601 timestamp
 * ``@message``: short message for this log
 * ``@fields``: all extra fields
+
+::
 
   {
     "@fields": {
