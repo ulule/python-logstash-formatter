@@ -9,7 +9,7 @@ def read(*parts):
 setup(name='logstash_formatter',
       version='0.5.1',
       description='JSON formatter meant for logstash',
-      long_description=read('README.md'),
+      long_description=read('README.rst'),
       url='https://github.com/exoscale/python-logstash-formatter',
       author='Pierre-Yves Ritschard',
       author_email='pierre-yves.ritschard@exoscale.ch',
@@ -21,6 +21,7 @@ setup(name='logstash_formatter',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',
           'Natural Language :: English',
-          'Programming Language :: Python'
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 3'
       ],
       zip_safe=False)
