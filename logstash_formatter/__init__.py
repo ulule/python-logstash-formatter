@@ -1,3 +1,8 @@
+'''
+This library is provided to allow standard python
+logging to output log data as JSON formatted strings
+ready to be shipped out to logstash.
+'''
 import logging
 import socket
 import datetime
@@ -5,10 +10,40 @@ import traceback as tb
 import json
 import sys
 
-class LogstashFormatter(logging.Formatter):
-    def __init__(self, source_host=None, defaults={}):
+def _default_json_default(obj):
+    """
+    Coerce everything to strings. 
+    All objects representing time get output as ISO8601.
+    """
+    if isinstance(obj, datetime.datetime) or \
+       isinstance(obj,datetime.date) or      \
+       isinstance(obvj,datetime.time):
+        return obj.isoformat()
+    else:
+        return str(obj)
 
-        self.defaults = defaults
+class LogstashFormatter(logging.Formatter):
+    """
+    A custom formatter to prepare logs to be
+    shipped out to logstash.
+    """
+
+    def __init__(self,
+                 source_host=None,
+                 extra={},
+                 json_encoder=None,
+                 json_default=_default_json_default):
+        """
+        :param source_host: override source host name
+        :param extra: provide extra fields always present in logs
+        :param json_encoder: JSON encoder to forward to json.dumps
+        :param json_default: Default JSON representation for unknown types,
+                             by default coerce everything to a string
+        """
+
+        self.json_default
+        self.json_encoder
+        self.defaults = extra
         if source_host:
             self.source_host = source_host
         else:
@@ -18,6 +53,11 @@ class LogstashFormatter(logging.Formatter):
                 self.source_host = ""
 
     def format(self, record):
+        """
+        Format a log record to JSON, if the message is a dict
+        assume an empty message and use the dict as additional
+        fields.
+        """
 
         fields = record.__dict__
         
@@ -46,5 +86,6 @@ class LogstashFormatter(logging.Formatter):
                      '@source_host': self.source_host,
                      '@fields': fields})
 
-        print(logr)
-        return json.dumps(logr)
+        return json.dumps(logr,
+                          json_default=self.json_default,
+                          json_encoder=self.json_encoder)
