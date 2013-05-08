@@ -59,7 +59,7 @@ class LogstashFormatter(logging.Formatter):
         fields.
         """
 
-        fields = record.__dict__
+        fields = record.__dict__.copy()
         
         if isinstance(record.msg, dict):
             fields.update(record.msg)
