@@ -17,7 +17,7 @@ def _default_json_default(obj):
     """
     if isinstance(obj, datetime.datetime) or \
        isinstance(obj,datetime.date) or      \
-       isinstance(obvj,datetime.time):
+       isinstance(obj,datetime.time):
         return obj.isoformat()
     else:
         return str(obj)
