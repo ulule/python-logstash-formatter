@@ -29,8 +29,7 @@ class LogstashFormatter(logging.Formatter):
     """
 
     def __init__(self,
-                 source_host=None,
-                 extra={},
+                 fmt=None,
                  json_cls=None,
                  json_default=_default_json_default):
         """
@@ -41,14 +40,18 @@ class LogstashFormatter(logging.Formatter):
                              by default coerce everything to a string
         """
 
+        if fmt is not None:
+            self._fmt = json.loads(fmt)
+        else:
+            self._fmt = {}
         self.json_default = json_default
         self.json_cls = json_cls
-        if extra is None:
+        if 'extra' not in self._fmt:
             self.defaults = {}
         else:
-            self.defaults = extra
-        if source_host:
-            self.source_host = source_host
+            self.defaults = self._fmt['extra']
+        if 'source_host' in self._fmt:
+            self.source_host = self._fmt['source_host']
         else:
             try:
                 self.source_host = socket.gethostname()
