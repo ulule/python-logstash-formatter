@@ -12,7 +12,7 @@ import sys
 
 def _default_json_default(obj):
     """
-    Coerce everything to strings. 
+    Coerce everything to strings.
     All objects representing time get output as ISO8601.
     """
     if isinstance(obj, datetime.datetime) or \
@@ -43,7 +43,10 @@ class LogstashFormatter(logging.Formatter):
 
         self.json_default = json_default
         self.json_cls = json_cls
-        self.defaults = extra
+        if extra is None:
+            self.defaults = {}
+        else:
+            self.defaults = extra
         if source_host:
             self.source_host = source_host
         else:
@@ -60,7 +63,7 @@ class LogstashFormatter(logging.Formatter):
         """
 
         fields = record.__dict__.copy()
-        
+
         if isinstance(record.msg, dict):
             fields.update(record.msg)
             fields.pop('msg')
@@ -82,7 +85,7 @@ class LogstashFormatter(logging.Formatter):
 
         logr = self.defaults.copy()
         logr.update({'@message': msg,
-                     '@timestamp': datetime.datetime.utcnow().isoformat(),
+                     '@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                      '@source_host': self.source_host,
                      '@fields': fields})
 
