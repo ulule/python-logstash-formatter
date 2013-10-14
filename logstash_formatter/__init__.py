@@ -30,6 +30,7 @@ class LogstashFormatter(logging.Formatter):
 
     def __init__(self,
                  fmt=None,
+                 datefmt=None,
                  json_cls=None,
                  json_default=_default_json_default):
         """
