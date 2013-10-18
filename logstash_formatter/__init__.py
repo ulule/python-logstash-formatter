@@ -8,7 +8,6 @@ import socket
 import datetime
 import traceback as tb
 import json
-import sys
 
 def _default_json_default(obj):
     """
@@ -92,5 +91,40 @@ class LogstashFormatter(logging.Formatter):
                      '@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                      '@source_host': self.source_host,
                      '@fields': fields})
+
+        return json.dumps(logr, default=self.json_default, cls=self.json_cls)
+
+
+class LogstashFormatterV1(LogstashFormatter):
+    """
+    A custom formatter to prepare logs to be
+    shipped out to logstash V1 format.
+    """
+
+    def format(self, record):
+        """
+        Format a log record to JSON, if the message is a dict
+        assume an empty message and use the dict as additional
+        fields.
+        """
+
+        fields = record.__dict__.copy()
+
+        if 'exc_info' in fields:
+            if fields['exc_info']:
+                formatted = tb.format_exception(*fields['exc_info'])
+                fields['exception'] = formatted
+            fields.pop('exc_info')
+
+        if 'exc_text' in fields and not fields['exc_text']:
+            fields.pop('exc_text')
+
+        base_log = {'@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                    '@version': 1,
+                    'source_host': self.source_host}
+        base_log.update(fields)
+
+        logr = self.defaults.copy()
+        logr.update(base_log)
 
         return json.dumps(logr, default=self.json_default, cls=self.json_cls)
