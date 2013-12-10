@@ -112,6 +112,16 @@ class LogstashFormatterV1(LogstashFormatter):
 
         fields = record.__dict__.copy()
 
+        if isinstance(record.msg, dict):
+            fields.update(record.msg)
+            fields.pop('msg')
+            msg = ""
+        else:
+            msg = record.getMessage()
+
+        if 'msg' in fields:
+            fields.pop('msg')
+
         if 'exc_info' in fields:
             if fields['exc_info']:
                 formatted = tb.format_exception(*fields['exc_info'])
@@ -123,7 +133,8 @@ class LogstashFormatterV1(LogstashFormatter):
 
         base_log = {'@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                     '@version': 1,
-                    'source_host': self.source_host}
+                    'source_host': self.source_host,
+                    'message': msg}
         base_log.update(fields)
 
         logr = self.defaults.copy()

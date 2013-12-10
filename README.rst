@@ -97,3 +97,46 @@ The following keys will be found in the output JSON:
     "@timestamp": "2013-05-02T09:39:48.013158"
   }
 
+Sample output V1
+----------------
+
+The following keys will always be found in the output JSON:
+
+* ``source_host``: source hostname for the log
+* ``@timestamp``: ISO 8601 timestamp
+* ``message``: short message for this log
+* ``@version``: the format version, 1 in this case
+
+All other keys are optional
+
+::
+
+  {
+    "account": "pyr",
+    "args": [],
+    "created": 1367480388.013037,
+    "exception": [
+        "Traceback (most recent call last):\n",
+        "  File \"toto.py\", line 16, in <module>\n    k['unknown']\n",
+        "KeyError: 'unknown'\n"
+    ],
+    "filename": "toto.py",
+    "funcName": "<module>",
+    "levelname": "WARNING",
+    "levelno": 30,
+    "lineno": 18,
+    "module": "toto",
+    "msecs": 13.036966323852539,
+    "name": "root",
+    "pathname": "toto.py",
+    "process": 1819,
+    "processName": "MainProcess",
+    "relativeCreated": 18.002986907958984,
+    "thread": 140060726359808,
+    "threadName": "MainThread",
+    "message": "TOTO",
+    "@source_host": "phoenix.spootnik.org",
+    "@timestamp": "2013-05-02T09:39:48.013158",
+    "@version": 1
+  }
+
