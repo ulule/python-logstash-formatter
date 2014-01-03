@@ -89,13 +89,33 @@ class LogstashFormatter(logging.Formatter):
             fields.pop('exc_text')
 
         logr = self.defaults.copy()
+
         logr.update({'@message': msg,
                      '@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                      '@source_host': self.source_host,
-                     '@fields': fields})
+                     '@fields': self._build_fields(logr, fields)})
 
         return json.dumps(logr, default=self.json_default, cls=self.json_cls)
 
+    def _build_fields(self, defaults, fields):
+        """Return provided fields including any in defaults
+
+        >>> f = LogstashFormatter()
+        # Verify that ``fields`` is used
+        >>> f._build_fields({}, {'foo': 'one'}) == \
+                {'foo': 'one'}
+        True
+        # Verify that ``@fields`` in ``defaults`` is used
+        >>> f._build_fields({'@fields': {'bar': 'two'}}, {'foo': 'one'}) == \
+                {'foo': 'one', 'bar': 'two'}
+        True
+        # Verify that ``fields`` takes precedence
+        >>> f._build_fields({'@fields': {'foo': 'two'}}, {'foo': 'one'}) == \
+                {'foo': 'one'}
+        True
+        """
+        return dict(defaults.get('@fields', {}).items() + fields.items())
+    
 
 class LogstashFormatterV1(LogstashFormatter):
     """
