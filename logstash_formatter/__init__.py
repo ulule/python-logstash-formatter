@@ -36,7 +36,8 @@ class LogstashFormatter(logging.Formatter):
         :param fmt: Config as a JSON string, allowed fields;
                extra: provide extra fields always present in logs
                source_host: override source host name
-        :param datefmt: Date format to use
+        :param datefmt: Date format to use (required by logging.Formatter
+            interface but not used)
         :param json_cls: JSON encoder to forward to json.dumps
         :param json_default: Default JSON representation for unknown types,
                              by default coerce everything to a string

@@ -37,8 +37,12 @@ Json outputs are provided by the LogstashFormatter logging formatter.
 
 The LogstashFormatter may take the following named parameters:
 
-* ``source_host``: override source hostname
-* ``extra``: provide extra fields present in all messages
+* ``fmt``: Config as a JSON string that supports:
+  * ``extra``: provide extra fields always present in logs
+  * ``source_host``: override source host name
+* ``json_cls``: JSON encoder to forward to ``json.dump``
+* ``json_default``: Default JSON representation for unknown types,
+    by default coerce everythiung to a string
 
 You can also add extra fields to your json output by specifying a dict in place of message, or by specifying
 the named argument ``extra`` as a dictionary. When supplying the ``exc_info`` named argument with a truthy value,
