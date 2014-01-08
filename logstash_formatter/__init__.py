@@ -142,7 +142,8 @@ class LogstashFormatterV1(LogstashFormatter):
         if 'exc_text' in fields and not fields['exc_text']:
             fields.pop('exc_text')
 
-        base_log = {'@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+		now = datetime.datetime.utcnow()
+        base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") + ".%03d" % (now.microsecond / 1000) + "Z",
                     '@version': 1,
                     'source_host': self.source_host}
         base_log.update(fields)
