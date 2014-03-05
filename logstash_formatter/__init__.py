@@ -14,9 +14,7 @@ def _default_json_default(obj):
     Coerce everything to strings.
     All objects representing time get output as ISO8601.
     """
-    if isinstance(obj, datetime.datetime) or \
-       isinstance(obj,datetime.date) or      \
-       isinstance(obj,datetime.time):
+    if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
         return obj.isoformat()
     else:
         return str(obj)
