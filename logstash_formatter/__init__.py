@@ -113,7 +113,7 @@ class LogstashFormatter(logging.Formatter):
                 {'foo': 'one'}
         True
         """
-        return dict(defaults.get('@fields', {}).items() + fields.items())
+        return dict(defaults.get(list('@fields', {}).items()) + list(fields.items()))
     
 
 class LogstashFormatterV1(LogstashFormatter):
@@ -140,7 +140,7 @@ class LogstashFormatterV1(LogstashFormatter):
         if 'exc_text' in fields and not fields['exc_text']:
             fields.pop('exc_text')
 
-	now = datetime.datetime.utcnow()
+        now = datetime.datetime.utcnow()
         base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") + ".%03d" % (now.microsecond / 1000) + "Z",
                     '@version': 1,
                     'source_host': self.source_host}
