@@ -145,7 +145,8 @@ class LogstashFormatterV1(LogstashFormatter):
             fields.pop('exc_text')
 
         now = datetime.datetime.utcnow()
-        base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") + ".%03d" % (now.microsecond / 1000) + "Z",
+        base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") +
+                    ".%03d" % (now.microsecond / 1000) + "Z",
                     '@version': 1,
                     'source_host': self.source_host}
         base_log.update(fields)
