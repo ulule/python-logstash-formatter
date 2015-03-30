@@ -6,17 +6,15 @@ as json objects ready to be shipped out to logstash.
 
 Installing
 ----------
-Pip:
+Pip (`PyPI`_)::
 
-    ``pip install logstash_formatter``
+    pip install logstash_formatter
 
-Pypi:
+.. _PyPI: https://pypi.python.org/pypi/logstash_formatter
 
-   https://pypi.python.org/pypi/logstash_formatter
+Manual::
 
-Manual:
-
-    ``python setup.py install``
+    python setup.py install
 
 Usage
 -----
@@ -38,11 +36,13 @@ Json outputs are provided by the LogstashFormatter logging formatter.
 The LogstashFormatter may take the following named parameters:
 
 * ``fmt``: Config as a JSON string that supports:
-  * ``extra``: provide extra fields always present in logs
-  * ``source_host``: override source host name
-* ``json_cls``: JSON encoder to forward to ``json.dump``
+
+  * ``extra``: provide extra fields always present in logs.
+  * ``source_host``: override source host name.
+
+* ``json_cls``: JSON encoder to forward to ``json.dump``.
 * ``json_default``: Default JSON representation for unknown types,
-    by default coerce everything to a string
+  by default coerce everything to a string.
 
 ``LogstashFormatterV1`` adheres to the more 1.2.0 schema and will not update
 fields, apart from a special handling of ``msg`` which will be updated to
@@ -114,8 +114,8 @@ The following keys will be found in the output JSON:
 * ``@timestamp``: ISO 8601 timestamp
 * ``@version``: Version of the schema
 
-
 ::
+
     {"@version": 1,
      "account": "pyr",
      "lineno": 1,
@@ -138,4 +138,3 @@ The following keys will be found in the output JSON:
      "funcName": "<module>",
      "levelname": "WARNING",
      "message": "foo"}
-
