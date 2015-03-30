@@ -131,6 +131,10 @@ class LogstashFormatterV1(LogstashFormatter):
 
         fields = record.__dict__.copy()
 
+        if 'msg' in fields and not 'message' in fields:
+            msg = fields.pop('msg')
+            fields['message'] = msg
+
         if 'exc_info' in fields:
             if fields['exc_info']:
                 formatted = tb.format_exception(*fields['exc_info'])
