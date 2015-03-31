@@ -55,7 +55,7 @@ and if an exception is found on the stack, its traceback will be attached to the
 ::
 
     logger.info({"account": 123, "ip": "172.20.19.18"})
-    logger.info("classic message for account: %s" % account, extra={"account": account})
+    logger.info("classic message for account: {account}" % account, extra={"account": account})
     
     try:
       h = {}
