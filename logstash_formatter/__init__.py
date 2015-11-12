@@ -136,7 +136,11 @@ class LogstashFormatterV1(LogstashFormatter):
 
         fields = record.__dict__.copy()
 
-        if 'msg' in fields and not 'message' in fields:
+        if 'msg' in fields and isinstance(fields['msg'], dict):
+            msg = fields.pop('msg')
+            fields.update(msg)
+
+        elif 'msg' in fields and 'message' not in fields:
             msg = fields.pop('msg')
             try:
                 msg = msg.format(**fields)
