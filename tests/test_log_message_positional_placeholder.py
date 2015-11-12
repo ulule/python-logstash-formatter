@@ -1,5 +1,5 @@
 import logging
-import StringIO
+from io import StringIO
 import unittest
 
 import logstash_formatter

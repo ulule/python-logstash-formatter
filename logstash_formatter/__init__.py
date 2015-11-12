@@ -77,9 +77,7 @@ class LogstashFormatter(logging.Formatter):
 
         try:
             msg = msg.format(**fields)
-        except KeyError:
-            pass
-        except IndexError:
+        except (KeyError, IndexError):
             pass
 
         if 'msg' in fields:
@@ -146,9 +144,7 @@ class LogstashFormatterV1(LogstashFormatter):
             msg = fields.pop('msg')
             try:
                 msg = msg.format(**fields)
-            except KeyError:
-                pass
-            except IndexError:
+            except (KeyError, IndexError):
                 pass
             fields['message'] = msg
 
