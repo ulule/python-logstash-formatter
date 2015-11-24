@@ -141,7 +141,9 @@ class LogstashFormatterV1(LogstashFormatter):
             fields.update(msg)
 
         elif 'msg' in fields and 'message' not in fields:
-            msg = fields.pop('msg')
+            msg = record.getMessage()
+            fields.pop('msg')
+
             try:
                 msg = msg.format(**fields)
             except (KeyError, IndexError):
