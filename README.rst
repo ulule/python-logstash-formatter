@@ -4,6 +4,8 @@ logstash_formatter: JSON logs for logstash
 This library is provided to allow standard python logging to output log data
 as json objects ready to be shipped out to logstash.
 
+## <style color="red">this project is looking for a new maintainer</style>
+
 Installing
 ----------
 Pip (`PyPI`_)::
