@@ -40,7 +40,7 @@ The LogstashFormatter may take the following named parameters:
 * ``fmt``: Config as a JSON string that supports:
 
   * ``extra``: provide extra fields always present in logs.
-  * ``source_host``: override source host name.
+  * ``source_host``: override source host name; set to ``null`` to exclude.
 
 * ``json_cls``: JSON encoder to forward to ``json.dump``.
 * ``json_default``: Default JSON representation for unknown types,
@@ -140,3 +140,10 @@ The following keys will be found in the output JSON:
      "funcName": "<module>",
      "levelname": "WARNING",
      "message": "foo"}
+
+Known issues
+------------
+
+The handlers which use the logstash formatters must be the first ones added to the logger.
+Otherwise the "classic message" example above won't work. Specifically, the "{account}" won't
+be interpolated into the message.

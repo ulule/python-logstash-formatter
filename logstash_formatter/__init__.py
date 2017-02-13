@@ -30,7 +30,6 @@ class LogstashFormatter(logging.Formatter):
     def __init__(self,
                  fmt=None,
                  datefmt=None,
-                 style='%',
                  json_cls=None,
                  json_default=_default_json_default):
         """
@@ -44,6 +43,7 @@ class LogstashFormatter(logging.Formatter):
                              by default coerce everything to a string
         """
 
+        super(LogstashFormatter, self).__init__(None, datefmt)
         if fmt is not None:
             self._fmt = json.loads(fmt)
         else:
@@ -97,12 +97,18 @@ class LogstashFormatter(logging.Formatter):
 
         logr = self.defaults.copy()
 
+        timestamp = datetime.datetime.fromtimestamp(fields['created'])
         logr.update({'@message': msg,
-                     '@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                     '@timestamp': timestamp.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                      '@source_host': self.source_host,
                      '@fields': self._build_fields(logr, fields)})
 
+        self._preprocess(logr)
         return json.dumps(logr, default=self.json_default, cls=self.json_cls)
+
+    def _preprocess(self, logr):
+        """A hook which can be used to add, modify, or remove any fields from the json output"""
+        pass
 
     def _build_fields(self, defaults, fields):
         """Return provided fields including any in defaults
@@ -162,14 +168,16 @@ class LogstashFormatterV1(LogstashFormatter):
         if 'exc_text' in fields and not fields['exc_text']:
             fields.pop('exc_text')
 
-        now = datetime.datetime.utcnow()
-        base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") +
-                    ".%03d" % (now.microsecond / 1000) + "Z",
-                    '@version': 1,
-                    'source_host': self.source_host}
+        timestamp = datetime.datetime.fromtimestamp(fields['created'])
+        base_log = {'@timestamp': timestamp.strftime("%Y-%m-%dT%H:%M:%S") +
+                    ".%03d" % (timestamp.microsecond / 1000) + "Z",
+                    '@version': 1}
+        if self.source_host is not None:
+            base_log['source_host'] = self.source_host
         base_log.update(fields)
 
         logr = self.defaults.copy()
         logr.update(base_log)
 
+        self._preprocess(logr)
         return json.dumps(logr, default=self.json_default, cls=self.json_cls)
