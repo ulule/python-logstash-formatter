@@ -71,17 +71,7 @@ class LogstashFormatter(logging.Formatter):
 
         fields = record.__dict__.copy()
 
-        if isinstance(record.msg, dict):
-            fields.update(record.msg)
-            fields.pop('msg')
-            msg = ""
-        else:
-            msg = record.getMessage()
-
-        try:
-            msg = msg.format(**fields)
-        except (KeyError, IndexError):
-            pass
+        msg = record.getMessage()
 
         if 'msg' in fields:
             fields.pop('msg')
@@ -122,54 +112,3 @@ class LogstashFormatter(logging.Formatter):
         True
         """
         return dict(list(defaults.get('@fields', {}).items()) + list(fields.items()))
-
-
-class LogstashFormatterV1(LogstashFormatter):
-    """
-    A custom formatter to prepare logs to be
-    shipped out to logstash V1 format.
-    """
-
-    def format(self, record):
-        """
-        Format a log record to JSON, if the message is a dict
-        assume an empty message and use the dict as additional
-        fields.
-        """
-
-        fields = record.__dict__.copy()
-
-        if 'msg' in fields and isinstance(fields['msg'], dict):
-            msg = fields.pop('msg')
-            fields.update(msg)
-
-        elif 'msg' in fields and 'message' not in fields:
-            msg = record.getMessage()
-            fields.pop('msg')
-
-            try:
-                msg = msg.format(**fields)
-            except (KeyError, IndexError):
-                pass
-            fields['message'] = msg
-
-        if 'exc_info' in fields:
-            if fields['exc_info']:
-                formatted = tb.format_exception(*fields['exc_info'])
-                fields['exception'] = formatted
-            fields.pop('exc_info')
-
-        if 'exc_text' in fields and not fields['exc_text']:
-            fields.pop('exc_text')
-
-        now = datetime.datetime.utcnow()
-        base_log = {'@timestamp': now.strftime("%Y-%m-%dT%H:%M:%S") +
-                    ".%03d" % (now.microsecond / 1000) + "Z",
-                    '@version': 1,
-                    'source_host': self.source_host}
-        base_log.update(fields)
-
-        logr = self.defaults.copy()
-        logr.update(base_log)
-
-        return json.dumps(logr, default=self.json_default, cls=self.json_cls)
