@@ -1,5 +1,5 @@
 import logging
-from io import StringIO
+from six import StringIO
 import unittest
 
 import logstash_formatter
@@ -8,12 +8,13 @@ import logstash_formatter
 class LogMessagePositionalPlaceholderTest(unittest.TestCase):
 
     def setUp(self):
-        self.stream = StringIO.StringIO()
+        self.stream = StringIO()
         handler = logging.StreamHandler(self.stream)
         handler.setFormatter(logstash_formatter.LogstashFormatterV1())
         handler.setLevel(logging.DEBUG)
         self.log = logging.getLogger('test')
         self.log.addHandler(handler)
+        self.log.setLevel(logging.DEBUG)
 
     def assertLogMessage(self, msg):
         self.assertTrue(
@@ -37,4 +38,8 @@ def make_method(msg):
 
 
 for name, msg in test_msgs.items():
+    name = 'test_{}'.format(name)
     setattr(LogMessagePositionalPlaceholderTest, name, make_method(msg))
+
+
+print(LogMessagePositionalPlaceholderTest)
