@@ -82,6 +82,9 @@ class LogstashFormatter(logging.Formatter):
             msg = msg.format(**fields)
         except (KeyError, IndexError):
             pass
+        except:
+            # in case we can not format the msg properly we log it as is instead of crashing
+            msg = msg
 
         if 'msg' in fields:
             fields.pop('msg')
@@ -151,6 +154,9 @@ class LogstashFormatterV1(LogstashFormatter):
                 msg = msg.format(**fields)
             except (KeyError, IndexError):
                 pass
+            except:
+                # in case we can not format the msg properly we log it as is instead of crashing
+                msg = msg
             fields['message'] = msg
 
         if 'exc_info' in fields:
