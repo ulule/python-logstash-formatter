@@ -80,6 +80,13 @@ class LogstashFormatter(logging.Formatter):
 
         try:
             msg = msg.format(**fields)
+        except ValueError:
+            # Gracefully fallback to old-style `%` formatting.
+            # TODO: use `style` argument to constructor, see logging module
+            try:
+                msg = msg % fields
+            except (KeyError, IndexError):
+                pass
         except (KeyError, IndexError):
             pass
         except:
@@ -152,6 +159,13 @@ class LogstashFormatterV1(LogstashFormatter):
 
             try:
                 msg = msg.format(**fields)
+            except ValueError:
+                # Gracefully fallback to old-style `%` formatting.
+                # TODO: use `style` argument to constructor, see logging module
+                try:
+                    msg = msg % fields
+                except (KeyError, IndexError):
+                    pass
             except (KeyError, IndexError):
                 pass
             except:
