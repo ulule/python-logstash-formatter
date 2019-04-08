@@ -26,14 +26,14 @@ Json outputs are provided by the LogstashFormatter logging formatter.
 ::
 
     import logging
+    import sys
     from logstash_formatter import LogstashFormatterV1
 
-    logger = logging.getLogger()
-    handler = logging.StreamHandler()
-    formatter = LogstashFormatterV1()
+    handler = logging.StreamHandler(stream=sys.stdout)
+    handler.setFormatter(LogstashFormatterV1())
+    logging.basicConfig(handlers=[handler])
 
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    logging.warning("hello")
 
 The LogstashFormatter may take the following named parameters:
 
