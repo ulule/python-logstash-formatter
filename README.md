@@ -21,15 +21,16 @@ python setup.py install
 ## Usage
 Json outputs are provided by the LogstashFormatter logging formatter.
 ~~~python
-import logging
-import sys
+import logging, sys
 from logstash_formatter import LogstashFormatterV1
 
+# configure logging
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setFormatter(LogstashFormatterV1())
-logging.basicConfig(handlers=[handler])
+logging.basicConfig(handlers=[handler], level=logging.INFO)
 
-logging.warning("hello")
+# use it
+logging.info("my log")
 ~~~
 
 The LogstashFormatter may take the following named parameters:
