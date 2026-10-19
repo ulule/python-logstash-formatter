@@ -63,7 +63,7 @@ except:
 ## Sample output for LogstashFormatter
 The following keys will be found in the output JSON:
 * `@source_host`: source hostname for the log
-* `@timestamp`: ISO 8601 timestamp
+* `@timestamp`: ISO 8601 UTC timestamp with microsecond precision and a `Z` suffix
 * `@message`: short message for this log
 * `@fields`: all extra fields
 
@@ -95,13 +95,13 @@ The following keys will be found in the output JSON:
     },
     "@message": "TEST",
     "@source_host": "phoenix.spootnik.org",
-    "@timestamp": "2013-05-02T09:39:48.013158"
+    "@timestamp": "2013-05-02T09:39:48.013158Z"
 }
 ~~~
 
 ## Sample output for LogstashFormatterV1
 The following keys will be found in the output JSON:
-* `@timestamp`: ISO 8601 timestamp
+* `@timestamp`: ISO 8601 UTC timestamp with millisecond precision and a `Z` suffix
 * `@version`: Version of the schema
 
 ~~~json
